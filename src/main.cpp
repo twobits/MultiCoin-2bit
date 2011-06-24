@@ -2088,7 +2088,7 @@ string GetWarnings(string strFor)
         return strStatusBar;
     else if (strFor == "rpc")
         return strRPC;
-    assert(("GetWarnings() : invalid parameter", false));
+    assert(!"GetWarnings() : invalid parameter");
     return "error";
 }
 
