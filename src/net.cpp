@@ -446,7 +446,7 @@ void ThreadGetMyExternalIP(void* parg)
 
 
 
-bool AddAddress(CAddress addr, int64 nTimePenalty)
+bool AddAddress(CAddress addr, int64 nTimePenalty, CAddrDB *pAddrDB)
 {
     if (!addr.IsRoutable())
         return false;
@@ -461,7 +461,10 @@ bool AddAddress(CAddress addr, int64 nTimePenalty)
             // New address
             printf("AddAddress(%s)\n", addr.ToString().c_str());
             mapAddresses.insert(make_pair(addr.GetKey(), addr));
-            CAddrDB().WriteAddress(addr);
+            if (pAddrDB)
+                pAddrDB->WriteAddress(addr);
+            else
+                CAddrDB().WriteAddress(addr);
             return true;
         }
         else
@@ -483,7 +486,12 @@ bool AddAddress(CAddress addr, int64 nTimePenalty)
                 fUpdated = true;
             }
             if (fUpdated)
-                CAddrDB().WriteAddress(addrFound);
+            {
+                if (pAddrDB)
+                    pAddrDB->WriteAddress(addrFound);
+                else
+                    CAddrDB().WriteAddress(addrFound);
+            }
         }
     }
     return false;
