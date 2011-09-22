@@ -1443,8 +1443,7 @@ Value getwork(const Array& params, bool fHelp)
 
         // Update nExtraNonce
         static unsigned int nExtraNonce = 0;
-        static int64 nPrevTime = 0;
-        IncrementExtraNonce(pblock, pindexPrev, nExtraNonce, nPrevTime);
+        IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
         // Save
         mapNewBlock[pblock->hashMerkleRoot] = make_pair(pblock, nExtraNonce);
@@ -1484,7 +1483,7 @@ Value getwork(const Array& params, bool fHelp)
 
         pblock->nTime = pdata->nTime;
         pblock->nNonce = pdata->nNonce;
-        pblock->vtx[0].vin[0].scriptSig = CScript() << pblock->nBits << CBigNum(nExtraNonce);
+        pblock->vtx[0].vin[0].scriptSig = CScript() << pblock->nTime << CBigNum(nExtraNonce);
         pblock->hashMerkleRoot = pblock->BuildMerkleTree();
 
         return CheckWork(pblock, *pwalletMain, reservekey);
@@ -1566,8 +1565,7 @@ Value getworkaux(const Array& params, bool fHelp)
 
         // Update nExtraNonce
         static unsigned int nExtraNonce = 0;
-        static int64 nPrevTime = 0;
-        IncrementExtraNonceWithAux(pblock, pindexPrev, nExtraNonce, nPrevTime, vchAux);
+        IncrementExtraNonceWithAux(pblock, pindexPrev, nExtraNonce, vchAux);
 
         // Save
         mapNewBlock[pblock->hashMerkleRoot] = make_pair(pblock, nExtraNonce);
@@ -1625,7 +1623,7 @@ Value getworkaux(const Array& params, bool fHelp)
 
         RemoveMergedMiningHeader(vchAux);
 
-        pblock->vtx[0].vin[0].scriptSig = MakeCoinbaseWithAux(pblock->nBits, nExtraNonce, vchAux);
+        pblock->vtx[0].vin[0].scriptSig = MakeCoinbaseWithAux(pblock->nTime, nExtraNonce, vchAux);
         pblock->hashMerkleRoot = pblock->BuildMerkleTree();
 
         if (params.size() > 2)
@@ -1720,7 +1718,7 @@ Value getauxblock(const Array& params, bool fHelp)
             pblock->nNonce = 0;
 
             // Push OP_2 just in case we want versioning later
-            pblock->vtx[0].vin[0].scriptSig = CScript() << pblock->nBits << CBigNum(1) << OP_2;
+            pblock->vtx[0].vin[0].scriptSig = CScript() << pblock->nTime << CBigNum(1) << OP_2;
             pblock->hashMerkleRoot = pblock->BuildMerkleTree();
 
             // Sets the version
