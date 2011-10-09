@@ -18,6 +18,7 @@ using namespace boost;
 
 CWallet* pwalletMain;
 string CoinName;
+int  OurChainID;
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -162,6 +163,7 @@ bool AppInit2(int argc, char* argv[])
     ReadConfigFile(mapArgs, mapMultiArgs); // Must be done after processing datadir
 
     CoinName = GetArg("-CoinName", "Bitcoin");
+    OurChainID = GetArg("-OurChainID", 0);
 
     if (mapArgs.count("-?") || mapArgs.count("--help"))
     {
