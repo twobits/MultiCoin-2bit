@@ -2,7 +2,7 @@
 
 rpcpassword=yourpassword
 rpcuser=yourusername
-printtoconsole=1
+printtoconsole=0
 testnet=1
 
 #check_block is a block to verify the integrity up to this block number used with check_hash if not set it's not checked
@@ -28,6 +28,9 @@ rpcport=48332
 #standard_ports_only=1
 
 paytxfee=.0005
+
+
+CoinName=namecoin
 
 # for the values bellow testnet_config line to be used testnet_config=1 must be set
 testnet_config=1
