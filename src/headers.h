@@ -10,12 +10,12 @@
 #endif
 #ifdef _WIN32_WINNT
 #undef _WIN32_WINNT
-#endif
 #define _WIN32_WINNT 0x0500
+#endif
 #ifdef _WIN32_IE
 #undef _WIN32_IE
-#endif
 #define _WIN32_IE 0x0400
+#endif
 #define WIN32_LEAN_AND_MEAN 1
 #define __STDC_LIMIT_MACROS // to enable UINT64_MAX from stdint.h
 #if (defined(__unix__) || defined(unix)) && !defined(USG)
@@ -58,7 +58,7 @@
 
 #include <boost/foreach.hpp>
 
-#ifdef __WXMSW__
+#ifdef _WIN32
 #include <windows.h>
 #include <winsock2.h>
 #include <mswsock.h>
@@ -99,19 +99,4 @@
 #include "ui.h"
 #else
 #include "noui.h"
-#endif
-
-#ifdef GUI
-#include "xpm/addressbook16.xpm"
-#include "xpm/addressbook20.xpm"
-#include "xpm/bitcoin16.xpm"
-#include "xpm/bitcoin20.xpm"
-#include "xpm/bitcoin32.xpm"
-#include "xpm/bitcoin48.xpm"
-#include "xpm/bitcoin80.xpm"
-#include "xpm/check.xpm"
-#include "xpm/send16.xpm"
-#include "xpm/send16noshadow.xpm"
-#include "xpm/send20.xpm"
-#include "xpm/about.xpm"
 #endif

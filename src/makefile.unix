@@ -8,7 +8,7 @@ WXINCLUDEPATHS=$(shell wx-config --cxxflags)
 
 WXLIBS=$(shell wx-config --libs)
 
-DEFS=-DNOPCH -DFOURWAYSSE2 -DUSE_SSL
+DEFS=-DNOPCH -DUSE_SSL
 
 # for boost 1.37, add -mt to the boost libraries
 LIBS= \
@@ -35,16 +35,16 @@ bitcoind: USE_UPNP:=0
 
 LIBS+= \
  -Wl,-Bdynamic \
-   -l gthread-2.0 \
    -l z \
    -l dl \
    -l pthread
 
 
 DEBUGFLAGS=-g -D__WXDEBUG__
-CXXFLAGS=-O2 -Wno-invalid-offsetof -Wformat $(DEBUGFLAGS) $(DEFS)
+CXXFLAGS=-O2 -pipe -Wno-invalid-offsetof -Wformat $(DEBUGFLAGS) $(DEFS)
 HEADERS=headers.h strlcpy.h serialize.h uint256.h util.h key.h bignum.h base58.h \
-    script.h db.h net.h irc.h keystore.h main.h wallet.h rpc.h uibase.h ui.h noui.h init.h auxpow.h
+    script.h db.h net.h irc.h keystore.h main.h wallet.h rpc.h \
+   noui.h init.h auxpow.h
 
 OBJS= \
     obj/auxpow.o \
@@ -60,8 +60,10 @@ OBJS= \
     cryptopp/obj/sha.o \
     cryptopp/obj/cpu.o
 
+all: multicoind multicoin
 
-all: bitcoin
+obj/uibase.o: uibase.h
+obj/ui.o: ui.h
 
 
 obj/%.o: %.cpp $(HEADERS)
@@ -70,9 +72,8 @@ obj/%.o: %.cpp $(HEADERS)
 cryptopp/obj/%.o: cryptopp/%.cpp
 	$(CXX) -c $(CXXFLAGS) -O3 -o $@ $<
 
-bitcoin: $(OBJS) obj/init.o obj/ui.o obj/uibase.o
+multicoin: $(OBJS) obj/init.o obj/ui.o obj/uibase.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(WXLIBS) $(LIBS)
-
 
 obj/nogui/%.o: %.cpp $(HEADERS)
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
@@ -80,7 +81,7 @@ obj/nogui/%.o: %.cpp $(HEADERS)
 obj/init-nomain.o: init.cpp $(HEADERS)
 	$(CXX) -c $(CXXFLAGS) -DNOMAIN -o $@ $<
 
-bitcoind: $(OBJS:obj/%=obj/nogui/%) obj/nogui/init.o
+multicoind: $(OBJS:obj/%=obj/nogui/%) obj/nogui/init.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 
 obj/test/%.o: test/%.cpp $(HEADERS)
