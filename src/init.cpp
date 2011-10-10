@@ -56,7 +56,7 @@ void Shutdown(void* parg)
         delete pwalletMain;
         CreateThread(ExitTimeout, NULL);
         Sleep(50);
-        printf("Bitcoin exiting\n\n");
+        printf("Multicoin exiting\n\n");
         fExit = true;
         exit(0);
     }
@@ -126,10 +126,10 @@ bool AppInit2(int argc, char* argv[])
     // Disable confusing "helpful" text message on abort, ctrl-c
     _set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
 #endif
-#ifndef __WXMSW__
+#ifndef _WIN32
     umask(077);
 #endif
-#ifndef __WXMSW__
+#ifndef _WIN32
     // Clean shutdown on SIGTERM
     struct sigaction sa;
     sa.sa_handler = HandleSIGTERM;
@@ -277,7 +277,7 @@ bool AppInit2(int argc, char* argv[])
         exit(ret);
     }
 
-#ifndef __WXMSW__
+#ifndef _WIN32
     if (fDaemon)
     {
         // Daemonize
@@ -555,11 +555,6 @@ bool AppInit2(int argc, char* argv[])
 
     if (fServer)
         CreateThread(ThreadRPCServer, NULL);
-
-#if defined(__WXMSW__) && defined(GUI)
-    if (fFirstRun)
-        SetStartOnSystemStartup(true);
-#endif
 
 #ifndef GUI
     while (1)
